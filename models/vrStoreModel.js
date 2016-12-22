@@ -8,6 +8,9 @@ var vrStoreModel = new Schema({
 	time: {
 		type: Date, 
 		default: Date.now
+	},
+	value: {
+		type: String
 	}
 });
 

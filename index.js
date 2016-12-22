@@ -71,6 +71,33 @@ vrStoreRouter.route('/vrStored/mykey')
 			}
 	});
 	
+vrStoreRouter.route('/vrStored/:keyValue')
+	.get(function(req,res){
+			console.log('received get request');
+			var query = {};
+			if (req.query.time){
+				var dateTime = new Date(req.query.time * 1000);
+				console.log(dateTime);
+				vrStore.find({"key" : req.params.keyValue, "time": {$lt: dateTime}}, function(err, vrStored){
+				if(err)
+					res.status(500).send(err);
+				else
+					res.json(vrStored);
+				}).sort({'time': -1})
+				.select('value')
+				.limit(1);
+			} else{
+				vrStore.find({"key" : req.params.keyValue}, function(err, vrStored){
+				if(err)
+					res.status(500).send(err);
+				else
+					res.json(vrStored);
+				}).sort({'time': -1})
+				.select('value')
+				.limit(1);
+			}
+	});
+	
 app.use('/api', vrStoreRouter);
 
 app.get('/', function(req, res){
